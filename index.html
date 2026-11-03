@@ -1,811 +1,916 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>지방교육행정기관 소속 센터 현황</title>
-  <style>
-    :root{
-      --bg: #f4f5f3;
-      --panel: #f8f9f8;
-      --card: #f6f7f6;
-      --line: #d9dfde;
-      --text: #24324a;
-      --sub: #6a778f;
-      --accent: #10a39a;
-      --accent-soft: #dff2ef;
-      --white: #ffffff;
-      --shadow: 0 2px 10px rgba(36, 50, 74, 0.04);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 18px;
-      --radius-sm: 12px;
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #e9eceb;
-      font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
-      color: var(--text);
-      overflow: hidden;
-    }
-
-    .deck {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-    }
-
-    .slide {
-      width: 100vw;
-      height: 100vh;
-      display: none;
-      padding: 32px;
-      background: var(--bg);
-    }
-
-    .slide.active {
-      display: block;
-    }
-
-    .frame {
-      width: 100%;
-      height: 100%;
-      background: var(--bg);
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 22px 26px 14px 26px;
-      border-bottom: 4px solid var(--accent);
-    }
-
-    .title-main {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.25;
-      color: var(--text);
-    }
-
-    .title-main .accent {
-      color: var(--accent);
-    }
-
-    .title-sub {
-      margin-top: 8px;
-      font-size: 16px;
-      color: var(--sub);
-      font-weight: 600;
-    }
-
-    .header-tag {
-      position: absolute;
-      right: 26px;
-      top: 22px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1.5px solid #b9d6d2;
-      background: #eef7f5;
-      color: #0d7d76;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .content {
-      padding: 22px 26px 26px 26px;
-      height: calc(100% - 104px);
-    }
-
-    .section-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #36445d;
-      margin-bottom: 20px;
-      letter-spacing: -0.03em;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: 1.08fr 1.08fr 1fr;
-      gap: 28px;
-      height: calc(100% - 58px);
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-lg);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      min-height: 0;
-    }
-
-    .panel-head {
-      background: #eef1f2;
-      border-bottom: 1px solid #dde3e4;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #e5f5f1;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    .panel-body {
-      padding: 20px;
-      flex: 1;
-      min-height: 0;
-    }
-
-    .small-note {
-      font-size: 13px;
-      color: var(--sub);
-      line-height: 1.5;
-    }
-
-    .muted {
-      color: var(--sub);
-    }
-
-    .summary-box {
-      border: 1.5px solid #d5dcde;
-      border-radius: 18px;
-      padding: 24px 22px;
-      background: #fbfbfb;
-      margin-top: 16px;
-      margin-bottom: 18px;
-    }
-
-    .summary-box .label {
-      font-size: 15px;
-      color: #5c6780;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-
-    .summary-box .big {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      text-align: right;
-      margin-top: 8px;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .mini-card {
-      border: 1.5px solid #d5dcde;
-      border-radius: 18px;
-      padding: 18px 14px;
-      background: #fbfbfb;
-      min-height: 128px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .mini-card.highlight {
-      border-color: #a7d8d1;
-      background: #fbfffe;
-    }
-
-    .mini-card .t1 {
-      font-size: 15px;
-      color: #5b6780;
-      line-height: 1.45;
-      font-weight: 700;
-    }
-
-    .mini-card .v1 {
-      margin-top: 12px;
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--text);
-    }
-
-    .mini-card.highlight .v1 {
-      color: #0d8f85;
-    }
-
-    .message-box {
-      margin-top: auto;
-      border: 1.5px solid #abd8d2;
-      background: #eaf6f3;
-      border-radius: 18px;
-      padding: 18px 18px;
-    }
-
-    .message-box strong {
-      display: block;
-      font-size: 16px;
-      color: #106b66;
-      margin-bottom: 8px;
-    }
-
-    .message-box p {
-      margin: 0;
-      font-size: 14px;
-      color: #24615b;
-      line-height: 1.6;
-    }
-
-    .feature-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .feature {
-      border: 1.5px solid #d8dfe0;
-      border-radius: 18px;
-      background: #fbfbfb;
-      padding: 14px 16px;
-    }
-
-    .feature-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .feature-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--text);
-      flex: 1;
-    }
-
-    .feature-value {
-      font-size: 16px;
-      font-weight: 900;
-      color: #0e968d;
-    }
-
-    .bar {
-      height: 6px;
-      width: 100%;
-      background: #dbe2e5;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    .bar > span {
-      display: block;
-      height: 100%;
-      background: var(--accent);
-      border-radius: 999px;
-    }
-
-    .feature-desc {
-      font-size: 13px;
-      color: #5d6980;
-      line-height: 1.5;
-    }
-
-    .callout-big {
-      border: 1.5px solid #d8dfe0;
-      border-left: 5px solid var(--accent);
-      background: #fbfbfb;
-      border-radius: 18px;
-      padding: 20px 24px;
-      margin-bottom: 16px;
-    }
-
-    .callout-big .label {
-      font-size: 15px;
-      font-weight: 800;
-      color: #4b5770;
-    }
-
-    .callout-big .value {
-      font-size: 50px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-top: 6px;
-      color: #4a5871;
-    }
-
-    .text-card {
-      border: 1.5px solid #d8dfe0;
-      border-radius: 18px;
-      background: #fbfbfb;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-    }
-
-    .text-card h4 {
-      margin: 0 0 10px 0;
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .text-card h4 .green {
-      color: #0e968d;
-    }
-
-    .text-card ul {
-      margin: 0;
-      padding-left: 20px;
-      color: #5d6980;
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .text-card li strong {
-      color: var(--text);
-    }
-
-    .bottom-note {
-      border: 1.5px solid #abd8d2;
-      background: #eaf6f3;
-      border-radius: 18px;
-      padding: 18px 18px;
-      margin-top: auto;
-      font-size: 14px;
-      line-height: 1.7;
-      color: #24615b;
-    }
-
-    /* slide 2 */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      height: calc(100% - 58px);
-    }
-
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 0;
-    }
-
-    .bullet-card {
-      border: 1.5px solid #d8dfe0;
-      border-radius: 18px;
-      background: #fbfbfb;
-      padding: 18px 20px;
-    }
-
-    .bullet-card h3 {
-      margin: 0 0 10px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .bullet-card ul {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 14px;
-      color: #5d6980;
-      line-height: 1.7;
-    }
-
-    .bullet-card p {
-      margin: 0;
-      font-size: 14px;
-      color: #5d6980;
-      line-height: 1.7;
-    }
-
-    /* slide 3 */
-    .proposal-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 22px;
-      height: calc(100% - 58px);
-    }
-
-    .proposal-box {
-      border: 1.5px solid #d8dfe0;
-      border-radius: 22px;
-      background: #fbfbfb;
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .proposal-box h3 {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .proposal-box ol, .proposal-box ul {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 14px;
-      color: #5d6980;
-      line-height: 1.75;
-    }
-
-    .proposal-box li + li {
-      margin-top: 6px;
-    }
-
-    .footer-controls {
-      position: fixed;
-      right: 22px;
-      bottom: 18px;
-      display: flex;
-      gap: 10px;
-      z-index: 50;
-    }
-
-    .footer-controls button {
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      background: #1f8f87;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    }
-
-    .footer-controls button:hover {
-      background: #14766f;
-    }
-
-    .slide-index {
-      position: fixed;
-      left: 22px;
-      bottom: 18px;
-      background: rgba(36, 50, 74, 0.08);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      z-index: 50;
-    }
-
-    @media (max-width: 1280px) {
-      .slide { padding: 18px; }
-      .title-main { font-size: 24px; }
-      .grid-3 { gap: 18px; }
-      .section-title { font-size: 18px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지방교육행정기관 소속 센터 현황</title>
+
+<style>
+/* ==============================
+   기본 디자인
+============================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 18px 0 100px;
+  background: #edf1f5;
+  color: #202a3d;
+  font-family:
+    "Malgun Gothic",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    sans-serif;
+}
+
+.stage {
+  width: min(98%, 1650px);
+  min-height: 80vh;
+  margin: 0 auto;
+  background: #ffffff;
+  box-shadow: 0 8px 40px #14243a20;
+}
+
+.slide {
+  display: none;
+  padding: 3.5% 3% 6%;
+  min-height: 80vh;
+}
+
+.slide.active {
+  display: block;
+}
+
+/* ==============================
+   제목
+============================== */
+.eyebrow {
+  color: #00998e;
+  font-size: 21px;
+  font-weight: 800;
+  margin-bottom: 23px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(27px, 2.9vw, 44px);
+  letter-spacing: -1.5px;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.lede {
+  color: #718099;
+  font-size: 19px;
+  line-height: 1.6;
+  margin: 19px 0 38px;
+}
+
+/* ==============================
+   3열 카드
+============================== */
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 35px;
+  align-items: stretch;
+}
+
+.card {
+  min-width: 0;
+  border: 1px solid #dae3ec;
+  border-radius: 24px;
+  padding: 22px 19px 28px;
+  box-shadow: 0 6px 24px #23354b08;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding-bottom: 17px;
+  border-bottom: 2px solid #e8edf2;
+  margin-bottom: 18px;
+}
+
+.num {
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 850;
+  color: #009b8f;
+  flex-shrink: 0;
+}
+
+h2 {
+  font-size: 21px;
+  margin: 0;
+  letter-spacing: -0.65px;
+  line-height: 1.4;
+}
+
+/* ==============================
+   핵심: 한글 줄바꿈 개선
+============================== */
+.item,
+.item b,
+.item p,
+.card p,
+.metric,
+.note,
+.summary,
+.lede {
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  line-break: strict;
+}
+
+.item p,
+.card p {
+  text-wrap: pretty;
+}
+
+.item {
+  padding: 12px 0;
+  border-bottom: 1px solid #e8edf2;
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.item b {
+  display: block;
+  font-size: 16.5px;
+  line-height: 1.45;
+  letter-spacing: -0.055em;
+}
+
+.item p {
+  margin: 6px 0 0;
+  color: #536175;
+  font-size: 14.5px;
+  line-height: 1.62;
+  letter-spacing: -0.055em;
+}
+
+.card > p {
+  color: #536175;
+  font-size: 14.5px;
+  line-height: 1.6;
+  letter-spacing: -0.04em;
+}
+
+/* ==============================
+   주요 통계 박스
+============================== */
+.metric {
+  background: #f0faf9;
+  padding: 17px;
+  border-radius: 14px;
+  color: #627386;
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 14px 0;
+}
+
+.metric strong {
+  display: block;
+  font-size: 42px;
+  line-height: 1.25;
+  color: #009b8f;
+  margin: 8px 0;
+  letter-spacing: -0.04em;
+}
+
+.note {
+  margin-top: 17px;
+  color: #7b8795;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ==============================
+   하단 요약
+============================== */
+.summary {
+  background: #f0faf9;
+  border-left: 5px solid #009b8f;
+  padding: 19px 23px;
+  margin-top: 24px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: -0.035em;
+}
+
+/* ==============================
+   발표용 버튼
+============================== */
+.controls {
+  position: fixed;
+  right: 20px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #172238f0;
+  padding: 9px 12px;
+  color: white;
+  border-radius: 28px;
+  z-index: 100;
+  font-size: 13px;
+  box-shadow: 0 3px 15px #0002;
+}
+
+.controls button {
+  border: 0;
+  border-radius: 18px;
+  padding: 9px 12px;
+  background: #ffffff24;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.controls button:hover {
+  background: #ffffff44;
+}
+
+.controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ==============================
+   화면 크기별 조정
+============================== */
+@media (min-width: 1100px) {
+  .columns {
+    gap: 17px;
+  }
+
+  .card {
+    padding-left: 19px;
+    padding-right: 19px;
+  }
+
+  .item p {
+    font-size: 14.5px;
+    letter-spacing: -0.06em;
+  }
+}
+
+@media (max-width: 1099px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .slide {
+    padding: 6% 5% 12%;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .item p {
+    font-size: 16px;
+  }
+
+  .eyebrow {
+    font-size: 18px;
+  }
+
+  .lede {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 0 0 95px;
+  }
+
+  .stage {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .slide {
+    padding: 28px 17px 90px;
+  }
+
+  .columns {
+    margin-top: 25px;
+  }
+
+  .card {
+    padding: 19px;
+  }
+
+  .num {
+    font-size: 44px;
+  }
+
+  h2 {
+    font-size: 19px;
+  }
+
+  .controls {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+}
+
+/* ==============================
+   인쇄 및 PDF 저장
+============================== */
+@media print {
+  body {
+    padding: 0;
+    background: white;
+  }
+
+  .stage {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .slide {
+    display: block !important;
+    min-height: auto;
+    page-break-after: always;
+  }
+
+  .columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls {
+    display: none;
+  }
+}
+</style>
 </head>
+
 <body>
-  <div class="deck">
 
-    <!-- Slide 1 -->
-    <section class="slide active">
-      <div class="frame">
-        <div class="header">
-          <div class="title-main">지방교육행정기관 소속 <span class="accent">센터</span> 현황</div>
-          <div class="title-sub">2024년 지방교육행정기관 심층기능진단</div>
-          <div class="header-tag">01 · 현황 및 기능 진단</div>
-        </div>
+<main class="stage">
 
-        <div class="content">
-          <div class="section-title">규모와 주요 기능 : 센터는 어디에 설치되어 있고, 누구에게 어떤 서비스를 제공하는가</div>
+<!-- =================================
+     슬라이드 1
+================================= -->
+<section class="slide active">
 
-          <div class="grid-3">
-            <!-- left -->
-            <div class="panel">
-              <div class="panel-head"><span class="num">1</span> 센터 규모와 설치 현황</div>
-              <div class="panel-body">
-                <div style="font-size:15px;font-weight:700;line-height:1.6;color:#49566f;">
-                  16개 시·도교육청 · 본청·교육지원청·직속기관<br>
-                  <span class="small-note">※ 제주 제외</span>
-                </div>
-
-                <div class="summary-box">
-                  <div class="label">조사된 전체 센터<br>행정기관과 학교의 가교 조직</div>
-                  <div class="big">1,902<span style="font-size:30px;">개</span></div>
-                </div>
-
-                <div class="mini-grid">
-                  <div class="mini-card">
-                    <div class="t1">시 지역 센터 중<br>교육지원청 설치 비율</div>
-                    <div class="v1">52.3%</div>
-                  </div>
-                  <div class="mini-card highlight">
-                    <div class="t1">도 지역 센터 중<br>교육지원청 설치 비율</div>
-                    <div class="v1">89.3%</div>
-                  </div>
-                </div>
-
-                <div class="message-box">
-                  <strong>설치 규모는 지역 여건에 따라 차이</strong>
-                  <p>단순 센터 수만으로 적정성을 판단하기보다 관할 면적과 수요자 접근성을 함께 고려할 필요가 있음</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- middle -->
-            <div class="panel">
-              <div class="panel-head"><span class="num">2</span> 비중이 큰 주요 기능</div>
-              <div class="panel-body">
-                <div class="feature-list">
-                  <div class="feature">
-                    <div class="feature-top">
-                      <span class="num" style="width:28px;height:28px;font-size:14px;">1</span>
-                      <div class="feature-title">교육 기능</div>
-                      <div class="feature-value">27.6%</div>
-                    </div>
-                    <div class="bar"><span style="width: 82%;"></span></div>
-                    <div class="feature-desc">진로·진학 · 영재 · 환경 · 체험 · 체육 등</div>
-                  </div>
-
-                  <div class="feature">
-                    <div class="feature-top">
-                      <span class="num" style="width:28px;height:28px;font-size:14px;">2</span>
-                      <div class="feature-title">소외계층 지원</div>
-                      <div class="feature-value">16.0%</div>
-                    </div>
-                    <div class="bar"><span style="width: 56%;"></span></div>
-                    <div class="feature-desc">다문화 · 특수 · 탈북 · 농어촌 · 교육복지 등</div>
-                  </div>
-
-                  <div class="feature">
-                    <div class="feature-top">
-                      <span class="num" style="width:28px;height:28px;font-size:14px;">3</span>
-                      <div class="feature-title">교수학습 지원</div>
-                      <div class="feature-value">12.2%</div>
-                    </div>
-                    <div class="bar"><span style="width: 44%;"></span></div>
-                    <div class="feature-desc">교수학습 · 방과후 · 기초학력 · 교육과정 등</div>
-                  </div>
-
-                  <div class="feature">
-                    <div class="feature-top">
-                      <span class="num" style="width:28px;height:28px;font-size:14px;">4</span>
-                      <div class="feature-title">학생안전</div>
-                      <div class="feature-value">10.6%</div>
-                    </div>
-                    <div class="bar"><span style="width: 38%;"></span></div>
-                    <div class="feature-desc">학생상담 · Wee센터 · 학교급식 · 안전 등</div>
-                  </div>
-                </div>
-
-                <div class="small-note" style="text-align:center;margin-top:12px;">
-                  ※ 전체 기능 분류 중 비중이 높은 4개 영역 예시
-                </div>
-              </div>
-            </div>
-
-            <!-- right -->
-            <div class="panel">
-              <div class="panel-head"><span class="num">3</span> 주요 이용 대상과 기관별 특성</div>
-              <div class="panel-body" style="display:flex;flex-direction:column;">
-                <div class="callout-big">
-                  <div class="label">주 이용 대상은 <span style="color:#0e968d;">학생</span></div>
-                  <div class="value">68.4%</div>
-                </div>
-
-                <div class="text-card">
-                  <h4><span class="green">본청·교육지원청</span> 소속 센터</h4>
-                  <ul>
-                    <li>직접적인 <strong>교육 기능</strong>의 비중이 높음</li>
-                    <li>특히 교육지원청 센터는 <strong>학생 대상 서비스</strong>가 중심</li>
-                  </ul>
-                </div>
-
-                <div class="text-card">
-                  <h4>직속기관 소속 센터</h4>
-                  <ul>
-                    <li><strong>정보화 기능(27.6%)</strong> 등의 비중이 상대적으로 높음</li>
-                    <li>주요 이용 대상 중 <strong>교직원 비중</strong>이 상대적으로 높음</li>
-                  </ul>
-                </div>
-
-                <div class="bottom-note">
-                  <strong>기관 위상에 따른 역할 분화</strong><br>
-                  본청·지원청은 학생 직접 지원, 직속기관은 교직원 및 정보화 인프라 지원 기능 수행
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 2 -->
-    <section class="slide">
-      <div class="frame">
-        <div class="header">
-          <div class="title-main">지방교육행정기관 소속 <span class="accent">센터</span> | 조직·인력</div>
-          <div class="title-sub">조직·인력 조사, 설문조사와 FGI에서 확인된 주요 실태</div>
-          <div class="header-tag">02 · 조직·인력 진단</div>
-        </div>
-
-        <div class="content">
-          <div class="section-title">센터 운영의 실태와 향후 과제</div>
-
-          <div class="grid-2">
-            <div class="stack">
-              <div class="bullet-card">
-                <h3><span class="num">1</span> 조직</h3>
-                <ul>
-                  <li><strong>직제상 분장사무 명시(62.8%)</strong></li>
-                  <li>행정기구 설치조례 시행규칙에 센터의 분장사무를 명시하여 권한과 책임을 보다 명확히 할 필요가 있음</li>
-                  <li>설치 근거가 다양하고 교육청별 편차가 있어, 운영 목적에 부합하는 조직구성과 인력 배치가 필요함</li>
-                </ul>
-              </div>
-
-              <div class="bullet-card">
-                <h3><span class="num">2</span> 인력</h3>
-                <ul>
-                  <li>법정센터에는 모두 센터장이 배치되어 있으나, 비법정센터는 미배치 또는 겸임 비율이 높은 편임</li>
-                  <li>비법정센터는 파견교사·용역·자원봉사·단시간 근로자 등 다양한 인력을 활용함</li>
-                  <li>전문적 지식·기술의 필요성에 비해 교육훈련 기회는 상대적으로 충분하지 않다고 인식함</li>
-                  <li>기능과 업무 특성을 고려한 적정 인력 배치와 안정적 운영 방안 검토 필요</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack">
-              <div class="bullet-card" style="flex:1;">
-                <h3><span class="num">3</span> 사무</h3>
-                <ul>
-                  <li>센터가 수행하는 업무의 중요도가 높고, 과·팀 업무와 다른 고유업무가 있다고 인식함</li>
-                  <li>업무량과 업무분장의 적정성은 대체로 보통 수준으로 인식함</li>
-                  <li>부서 내 협력과 중앙정부·교육청·센터 간 협력의 필요성에 대한 동의가 높게 나타남</li>
-                  <li>합리적 업무분장과 협력 강화, 주기적 기능·성과 진단 및 결과 환류가 필요함</li>
-                </ul>
-              </div>
-
-              <div class="message-box" style="margin-top:0;">
-                <strong>핵심 요약</strong>
-                <p>
-                  센터의 안정적·효율적 운영을 위해서는 목적에 맞는 조직구성,
-                  기능에 적합한 인력 배치, 그리고 합리적인 업무분장이 함께 검토되어야 함
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 3 -->
-    <section class="slide">
-      <div class="frame">
-        <div class="header">
-          <div class="title-main">지방교육행정기관 소속 <span class="accent">센터</span> | 개선 방향과 제언</div>
-          <div class="title-sub">센터 운영의 체계화, 인력·업무의 적정화, 후속 관리 과제</div>
-          <div class="header-tag">03 · 개선 방향</div>
-        </div>
-
-        <div class="content">
-          <div class="section-title">정체성과 효율성을 높이기 위한 정책 제언</div>
-
-          <div class="proposal-grid">
-            <div class="proposal-box">
-              <h3><span class="num">1</span> 조직 운영의 체계화</h3>
-              <ol>
-                <li>학생·교원·학교 수, 지역정책과 지리적 특성을 고려하여 적정 규모를 판단</li>
-                <li>센터의 권한과 책임을 분명히 하고, 전문영역에 따른 정체성 확립</li>
-                <li>설치 목적, 전문 기능의 타당성, 수요의 지속성 등을 포함한 설치 표준안 마련</li>
-                <li>전담 부서 지정과 (가칭)센터관리심의위원회 설치 등 점검·관리 체계 검토</li>
-              </ol>
-            </div>
-
-            <div class="proposal-box">
-              <h3><span class="num">2</span> 인력·업무의 적정화</h3>
-              <ol>
-                <li>통솔 범위와 업무 특성을 고려한 센터장·전문인력 적정 배치</li>
-                <li>정원으로 관리되지 않는 인력의 규모와 운영 방식의 적정성 진단</li>
-                <li>조직·인력 규모에 맞는 합리적 업무분장과 부서 내 협력 강화</li>
-                <li>기능 진단 결과를 업무량·업무분장·인력 배치에 활용하는 주기적 환류 체계 구축</li>
-              </ol>
-            </div>
-
-            <div class="proposal-box">
-              <h3><span class="num">3</span> 후속 관리 과제</h3>
-              <ol>
-                <li>중앙정부 차원의 운영 현황 조사와 최소한의 운영 방향 제시</li>
-                <li>교육청 조직정원 부서에 센터 관리 전담인력 확보와 용어·정의·유형 명확화</li>
-                <li>센터에 적합한 기능과 역할에 대한 논의 및 주기적 조직진단·직무분석 실시</li>
-              </ol>
-            </div>
-
-            <div class="proposal-box">
-              <h3><span class="num">4</span> 일몰 기준 마련</h3>
-              <ul>
-                <li>국정과제·교육감 시책 등에 따라 설치된 센터는 사업 종료 또는 기능의 대폭 축소 시 조직 폐지·통합을 검토하도록 일몰 기준을 마련</li>
-                <li>단순히 센터의 수만으로 판단하기보다, 개별 센터 운영의 타당성을 기준으로 정체성과 효율성을 확립할 필요가 있음</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="slide-index" id="slideIndex">1 / 3</div>
-
-    <div class="footer-controls">
-      <button onclick="prevSlide()">◀ 이전</button>
-      <button onclick="nextSlide()">다음 ▶</button>
-      <button onclick="toggleFullscreen()">전체화면</button>
-    </div>
+  <div class="eyebrow">
+    2024년 지방교육행정기관 심층기능진단
   </div>
 
-  <script>
-    const slides = document.querySelectorAll('.slide');
-    const slideIndex = document.getElementById('slideIndex');
-    let current = 0;
+  <h1>
+    지방교육행정기관 소속 센터 현황
+  </h1>
 
-    function updateSlides() {
-      slides.forEach((slide, idx) => {
-        slide.classList.toggle('active', idx === current);
-      });
-      slideIndex.textContent = `${current + 1} / ${slides.length}`;
-    }
+  <p class="lede">
+    규모와 주요 기능: 센터는 어디에 설치되어 있고,
+    누구에게 어떤 서비스를 제공하는가
+  </p>
 
-    function nextSlide() {
-      current = (current + 1) % slides.length;
-      updateSlides();
-    }
+  <div class="columns">
 
-    function prevSlide() {
-      current = (current - 1 + slides.length) % slides.length;
-      updateSlides();
-    }
+    <!-- 첫 번째 카드 -->
+    <article class="card">
 
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
+      <div class="head">
+        <span class="num">1</span>
+        <h2>센터 규모와 설치 현황</h2>
+      </div>
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-        e.preventDefault();
-        prevSlide();
-      } else if (e.key.toLowerCase() === 'f') {
-        toggleFullscreen();
-      }
-    });
+      <p>
+        16개 시·도교육청 · 본청·교육지원청·직속기관
+        (※ 제주 제외)
+      </p>
 
-    updateSlides();
-  </script>
+      <div class="metric">
+        조사된 센터
+        <strong>1,902개</strong>
+        행정기관과 학교의 가교 역할을 하는 조직
+      </div>
+
+      <div class="item">
+        <b>시 지역 센터 중</b>
+        <p>교육지원청 설치 비율 52.3%</p>
+      </div>
+
+      <div class="item">
+        <b>도 지역 센터 중</b>
+        <p>교육지원청 설치 비율 89.3%</p>
+      </div>
+
+      <div class="item">
+        <b>설치 규모는 지역에 따라 차이</b>
+        <p>
+          센터 수만으로 적정성을 판단하기보다
+          관할 면적과 수요자 접근성을 함께 고려할 필요가 있음
+        </p>
+      </div>
+
+    </article>
+
+    <!-- 두 번째 카드 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">2</span>
+        <h2>비중이 큰 주요 기능</h2>
+      </div>
+
+      <div class="item">
+        <b>① 교육(27.6%)</b>
+        <p>진로·진학·영재·환경·체험·체육 등</p>
+      </div>
+
+      <div class="item">
+        <b>② 소외계층 지원(16.0%)</b>
+        <p>
+          다문화·특수·탈북·농어촌·복지 소외계층 등
+        </p>
+      </div>
+
+      <div class="item">
+        <b>③ 교수학습(12.2%)</b>
+        <p>
+          교수학습·방과후·기초학력·교육과정 등
+        </p>
+      </div>
+
+      <div class="item">
+        <b>④ 학생안전(10.6%)</b>
+        <p>상담·WEE센터·급식·안전 등</p>
+      </div>
+
+      <p class="note">
+        기능별 분석에서 비중이 큰 네 영역만 제시함
+      </p>
+
+    </article>
+
+    <!-- 세 번째 카드 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">3</span>
+        <h2>주요 이용 대상과 기관별 특성</h2>
+      </div>
+
+      <div class="metric">
+        주 이용 대상은 학생
+        <strong>68.4%</strong>
+      </div>
+
+      <div class="item">
+        <b>본청·교육지원청</b>
+        <p>교육 기능의 비중이 높음</p>
+        <p>
+          교육지원청 센터는 학생 대상 서비스가 중심임
+        </p>
+      </div>
+
+      <div class="item">
+        <b>직속기관</b>
+        <p>
+          정보화 기능의 비중이 상대적으로 높고,
+          이용 대상 중 교직원 비중도 상대적으로 높음
+        </p>
+      </div>
+
+    </article>
+
+  </div>
+</section>
+
+<!-- =================================
+     슬라이드 2
+================================= -->
+<section class="slide">
+
+  <div class="eyebrow">
+    지방교육행정기관 소속 센터 | 조직·인력
+  </div>
+
+  <h1>
+    조직·인력 조사, 설문조사와 FGI에서 확인된 주요 실태
+  </h1>
+
+  <div class="columns">
+
+    <!-- 조직 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">1</span>
+        <h2>조직</h2>
+      </div>
+
+      <div class="metric">
+        직제상 분장사무 명시
+        <strong>62.8%</strong>
+      </div>
+
+      <div class="item">
+        <b>권한과 책임의 명확화</b>
+        <p>
+          행정기구 설치조례 시행규칙에 센터의
+          분장사무를 명시하여 권한과 책임 명확화할
+          필요가 있음
+        </p>
+      </div>
+
+      <div class="item">
+        <b>설치 근거와 목적의 명료화</b>
+        <p>
+          설치 근거가 다양하고 교육청별 편차가 있어,
+          운영 목적에 부합하는 조직구성과
+          인력 배치가 필요함
+        </p>
+      </div>
+
+    </article>
+
+    <!-- 인력 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">2</span>
+        <h2>인력</h2>
+      </div>
+
+      <div class="item">
+        <b>센터장 배치의 차이</b>
+        <p>
+          법정센터에는 모두 센터장이 배치되어 있으나,
+          비법정센터는 미배치 또는 겸임 비율이
+          높은 편임
+        </p>
+      </div>
+
+      <div class="item">
+        <b>기능에 맞는 인력 운영</b>
+        <p>
+          비법정센터는 파견교사·용역·자원봉사·
+          단시간 근로자 등 다양한 인력을 활용함
+        </p>
+      </div>
+
+      <div class="item">
+        <b>전문성 개발 기회</b>
+        <p>
+          전문적 지식·기술의 필요성에 비해
+          교육훈련 기회는 상대적으로 충분하지
+          않다고 인식함
+        </p>
+      </div>
+
+      <div class="item">
+        <b>향후 운영 방향</b>
+        <p>
+          기능과 업무 특성을 고려한 적정 인력
+          배치와 안정적 운영 방안 검토
+        </p>
+      </div>
+
+    </article>
+
+    <!-- 사무 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">3</span>
+        <h2>사무</h2>
+      </div>
+
+      <div class="item">
+        <b>업무의 중요성과 고유성</b>
+        <p>
+          센터가 수행하는 업무의 중요도가 높고,
+          과·팀 업무와 다른 고유업무가 있다고 인식함
+        </p>
+      </div>
+
+      <div class="item">
+        <b>업무량·업무분장</b>
+        <p>
+          업무량과 업무분장의 적정성은
+          대체로 보통 수준으로 인식함
+        </p>
+      </div>
+
+      <div class="item">
+        <b>협력의 필요성</b>
+        <p>
+          부서 내 협력과 중앙정부·교육청·센터 간
+          협력의 필요성에 대한 동의가 높게 나타남
+        </p>
+      </div>
+
+      <div class="item">
+        <b>향후 운영 방향</b>
+        <p>
+          합리적 업무분장과 협력 강화,
+          주기적 기능·성과 진단 및 결과 환류
+        </p>
+      </div>
+
+    </article>
+
+  </div>
+
+  <div class="summary">
+    센터의 안정적·효율적 운영을 위해서는
+    목적에 맞는 조직구성, 인력 배치와
+    합리적 업무분장이 필요함
+  </div>
+
+</section>
+
+<!-- =================================
+     슬라이드 3
+================================= -->
+<section class="slide">
+
+  <div class="eyebrow">
+    지방교육행정기관 소속 센터 | 개선 방향과 제언
+  </div>
+
+  <h1>
+    지방교육행정기관 소속 센터 개선 방향과 제언
+  </h1>
+
+  <div class="columns">
+
+    <!-- 조직 운영 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">1</span>
+        <h2>조직 운영의 체계화</h2>
+      </div>
+
+      <div class="item">
+        <b>① 지역 여건과 접근성 고려</b>
+        <p>
+          학생·교원·학교 수, 지역정책과 지리적
+          특성을 고려하여 적정 규모 판단
+        </p>
+      </div>
+
+      <div class="item">
+        <b>② 분장사무의 명확화 및 기능의 전문화</b>
+        <p>
+          센터의 권한과 책임을 분명히 하고
+          전문영역에 따른 정체성 확립
+        </p>
+      </div>
+
+      <div class="item">
+        <b>③ 센터 설치 표준안 마련</b>
+        <p>
+          설치 목적, 전문 기능의 타당성,
+          수요의 지속성 등을 설치 기준에 포함
+        </p>
+      </div>
+
+      <div class="item">
+        <b>④ 점검·관리 체계 검토</b>
+        <p>
+          전담 부서 지정과
+          (가칭)센터관리심의위원회 설치 검토
+        </p>
+      </div>
+
+    </article>
+
+    <!-- 인력·업무 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">2</span>
+        <h2>인력·업무의 적정화</h2>
+      </div>
+
+      <div class="item">
+        <b>① 센터장·전문인력 적정 배치</b>
+        <p>
+          통솔 범위와 업무 특성을 고려한 배치 및
+          전문인력 운영 방안 검토
+        </p>
+      </div>
+
+      <div class="item">
+        <b>② 인력 운영 방식 진단</b>
+        <p>
+          정원으로 관리되지 않는 인력의 규모와
+          운영 방식의 적정성을 살펴
+          안정적 운영 도모
+        </p>
+      </div>
+
+      <div class="item">
+        <b>③ 합리적 업무분장과 협력</b>
+        <p>
+          조직·인력 규모에 맞게 업무량을
+          적정화하고 부서 내 협력 강화
+        </p>
+      </div>
+
+      <div class="item">
+        <b>④ 주기적 진단과 환류</b>
+        <p>
+          기능 진단 결과를 업무량·업무분장·
+          인력 배치에 활용
+        </p>
+      </div>
+
+    </article>
+
+    <!-- 후속 관리 -->
+    <article class="card">
+
+      <div class="head">
+        <span class="num">3</span>
+        <h2>후속 관리 과제</h2>
+      </div>
+
+      <div class="item">
+        <b>① 중앙부처 단위 체계적 관리</b>
+        <p>
+          중앙정부 차원의 운영 현황 조사와
+          최소한의 운영 방향 제시
+        </p>
+      </div>
+
+      <div class="item">
+        <b>② 전담인력·개념 정립</b>
+        <p>
+          교육청 조직정원 부서에 센터 관리
+          전담인력 확보와 용어·정의·유형 명확화
+        </p>
+      </div>
+
+      <div class="item">
+        <b>③ 기능진단·직무분석 확대</b>
+        <p>
+          센터에 적합한 기능과 역할을 논의하고
+          주기적 조직진단·직무분석 실시
+        </p>
+      </div>
+
+      <div class="item">
+        <b>④ 일몰제 도입 고려</b>
+        <p>
+          국정과제·교육감 시책 등에 따라 설치된
+          센터는 사업 종료 또는 기능의 대폭 축소 시
+          조직 폐지·통합을 검토하도록
+          일몰 기준 마련
+        </p>
+      </div>
+
+    </article>
+
+  </div>
+
+  <div class="summary">
+    단순히 센터의 수로 판단하기보다,
+    개별 센터 운영의 타당성을 기준으로
+    정체성과 효율성을 확립할 필요가 있음
+  </div>
+
+</section>
+
+</main>
+
+<!-- =================================
+     발표 컨트롤
+================================= -->
+<nav class="controls">
+  <button id="prev">◀ 이전</button>
+  <span id="page">1 / 3</span>
+  <button id="next">다음 ▶</button>
+  <button id="fullscreen">전체화면</button>
+</nav>
+
+<script>
+const slides = [
+  ...document.querySelectorAll(".slide")
+];
+
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+const page = document.getElementById("page");
+const fullscreen =
+  document.getElementById("fullscreen");
+
+let current = 0;
+
+function show(n) {
+  current = Math.max(
+    0,
+    Math.min(slides.length - 1, n)
+  );
+
+  slides.forEach((slide, i) => {
+    slide.classList.toggle(
+      "active",
+      i === current
+    );
+  });
+
+  page.textContent =
+    (current + 1) + " / " + slides.length;
+
+  prev.disabled = current === 0;
+  next.disabled =
+    current === slides.length - 1;
+
+  history.replaceState(
+    null,
+    "",
+    "#" + (current + 1)
+  );
+
+  window.scrollTo({
+    top: 0,
+    behavior: "instant"
+  });
+}
+
+prev.addEventListener("click", () => {
+  show(current - 1);
+});
+
+next.addEventListener("click", () => {
+  show(current + 1);
+});
+
+fullscreen.addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    document.documentElement
+      .requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+});
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "ArrowRight" ||
+    e.key === "PageDown"
+  ) {
+    show(current + 1);
+  }
+
+  if (
+    e.key === "ArrowLeft" ||
+    e.key === "PageUp"
+  ) {
+    show(current - 1);
+  }
+
+  if (e.key === "Home") {
+    show(0);
+  }
+
+  if (e.key === "End") {
+    show(slides.length - 1);
+  }
+});
+
+window.addEventListener("hashchange", () => {
+  const n = parseInt(
+    location.hash.slice(1),
+    10
+  );
+
+  if (!Number.isNaN(n)) {
+    show(n - 1);
+  }
+});
+
+show(
+  (parseInt(location.hash.slice(1), 10) || 1) - 1
+);
+</script>
+
 </body>
 </html>
